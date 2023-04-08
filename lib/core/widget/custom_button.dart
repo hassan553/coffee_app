@@ -1,4 +1,4 @@
-import 'package:coffee_app/core/utils/app_colors.dart';
+import '../utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 import 'custom_text.dart';

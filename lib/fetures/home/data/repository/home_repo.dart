@@ -1,4 +1,4 @@
-import 'package:coffee_app/fetures/home/data/model/coffee_model.dart';
+import '../model/coffee_model.dart';
 import 'package:dio/dio.dart';
 
 class HomeRepository {

@@ -14,6 +14,7 @@ class AuthRepo {
           'Content-Type': 'application/json',
         },
       );
+      print(response.data);
     } catch (error) {
       print(error.toString());
     }

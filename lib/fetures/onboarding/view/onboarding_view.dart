@@ -1,9 +1,9 @@
-import 'package:coffee_app/core/functions/get_size.dart';
-import 'package:coffee_app/core/functions/navigation.dart';
-import 'package:coffee_app/core/utils/app_colors.dart';
-import 'package:coffee_app/core/widget/custom_button.dart';
-import 'package:coffee_app/core/widget/custom_sized_box.dart';
-import 'package:coffee_app/core/widget/custom_text.dart';
+import '../../../core/functions/get_size.dart';
+import '../../../core/functions/navigation.dart';
+import '../../../core/utils/app_colors.dart';
+import '../../../core/widget/custom_button.dart';
+import '../../../core/widget/custom_sized_box.dart';
+import '../../../core/widget/custom_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../auth/views/login_view.dart';

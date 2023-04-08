@@ -1,7 +1,7 @@
-import 'package:coffee_app/core/functions/get_size.dart';
-import 'package:coffee_app/core/functions/navigation.dart';
-import 'package:coffee_app/core/widget/custom_sized_box.dart';
-import 'package:coffee_app/core/widget/custom_text.dart';
+import '../../core/functions/get_size.dart';
+import '../../core/functions/navigation.dart';
+import '../../core/widget/custom_sized_box.dart';
+import '../../core/widget/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
