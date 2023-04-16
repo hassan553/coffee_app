@@ -1,7 +1,7 @@
-import '../fetures/onboarding/view/splash_view.dart';
 import 'package:flutter/material.dart';
 
 import '../fetures/onboarding/view/onboarding_view.dart';
+import '../fetures/onboarding/view/splash_view.dart';
 
 class AppRoute {
   static String splashRoute = '/splash';

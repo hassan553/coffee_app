@@ -1,8 +1,8 @@
 import '../../../core/utils/app_colors.dart';
 import '../../../core/widget/text_form_field.dart';
+import '../../home/presentation/views/home_view.dart';
 import '../widgets/auth_background_image.dart';
 import 'register_view.dart';
-import '../../home/views/home_view.dart';
 import 'package:flutter/material.dart';
 import '../../../core/functions/navigation.dart';
 import '../../../core/widget/custom_button.dart';

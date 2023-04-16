@@ -1,4 +1,3 @@
-import 'package:coffee_app/fetures/home/views/home_view.dart';
 import 'package:flutter/material.dart';
 import '../../../core/functions/get_size.dart';
 import '../../../core/functions/navigation.dart';
@@ -7,6 +6,7 @@ import '../../../core/widget/custom_button.dart';
 import '../../../core/widget/custom_sized_box.dart';
 import '../../../core/widget/custom_text.dart';
 import '../../../core/widget/text_form_field.dart';
+import '../../home/presentation/views/home_view.dart';
 import '../widgets/auth_background_image.dart';
 import '../widgets/top_left_image.dart';
 
