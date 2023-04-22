@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
 import '../../data/repository/auth_repo.dart';
@@ -9,7 +10,7 @@ class RegisterCubit extends Cubit<RegisterState> {
   AuthRepo authRepo;
 
   RegisterCubit(this.authRepo) : super(RegisterInitial());
-
+  static RegisterCubit get(context) => BlocProvider.of(context);
   Future userRegister({
     var name,
     var phone,

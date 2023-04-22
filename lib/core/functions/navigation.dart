@@ -10,9 +10,9 @@ void pop(context) {
 }
 
 void navigatedOffAll(Widget screen) {
-  Get.offAll(screen, transition: Transition.downToUp);
+  Get.offAll(() => screen, transition: Transition.downToUp);
 }
 
 void navigatedOff(Widget screen) {
-  Get.off(screen, transition: Transition.downToUp);
+  Get.off(()=>screen, transition: Transition.downToUp);
 }

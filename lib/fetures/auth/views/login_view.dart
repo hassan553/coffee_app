@@ -1,6 +1,11 @@
+import 'package:coffee_app/fetures/auth/auth_view_model/login/login_cubit.dart';
+import 'package:coffee_app/fetures/auth/data/repository/auth_repo.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../home/presentation/views/main_view.dart';
+
 import '../../../core/utils/app_colors.dart';
 import '../../../core/widget/text_form_field.dart';
-import '../../home/presentation/views/home_view.dart';
 import '../widgets/auth_background_image.dart';
 import 'register_view.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +19,11 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildLoginBody(context),
+    return BlocProvider(
+      create: (context) => LoginCubit(AuthRepo()),
+      child: Scaffold(
+        body: _buildLoginBody(context),
+      ),
     );
   }
 
@@ -80,12 +88,18 @@ class LoginView extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: SizedBox(
         width: MediaQuery.of(context).size.width * .7,
-        child: CustomButton(
-          function: () {
-            navigatedTo(const HomeView());
+        child: BlocConsumer<LoginCubit, LoginState>(
+          listener: (context, state) {
+            if (state is LoginSuccessfullyState) {
+              navigatedTo(const MainView());
+            }
           },
-          title: 'Sign In',
-          fontSize: 20,
+          builder: (context, state) => CustomButton(
+            function: () => LoginCubit.get(context)
+                .userLogin(email: 'omeir@gmail.com', password: '123456'),
+            title: 'Sign In',
+            fontSize: 20,
+          ),
         ),
       ),
     );
@@ -94,14 +108,18 @@ class LoginView extends StatelessWidget {
   Padding _buildSignUpButton() {
     return Padding(
       padding: const EdgeInsets.only(top: 30, right: 5),
-      child: MaterialButton(
-        padding: const EdgeInsets.all(20),
-        color: AppColors.brownLite,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        onPressed: () {
-          navigatedTo(const RegisterView());
+      child: BlocConsumer<LoginCubit, LoginState>(
+        listener: (context, state) {
+          if (state is LoginSuccessfullyState) {}
         },
-        child: const Text('Sign Up'),
+        builder: (context, state) => MaterialButton(
+          padding: const EdgeInsets.all(20),
+          color: AppColors.brownLite,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          onPressed: () => navigatedTo(const RegisterView()),
+          child: const Text('Sign Up'),
+        ),
       ),
     );
   }

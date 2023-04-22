@@ -6,10 +6,15 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 import '../../../../core/functions/get_size.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widget/custom_text.dart';
+import '../../../cart/data/model/cart_model.dart';
+import '../../../cart/presentation/cart_view_model.dart/cart_cubit.dart';
+import '../../../favorite/views/favorite_view.dart';
 import '../../data/model/coffee_model.dart';
 import '../components/_build_details_description.dart';
 import '../components/_build_icon_button.dart';
 import '../components/_build_select_coffe_size.dart';
+import 'package:coffee_app/fetures/home/home_view_model/home_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DetailsView extends StatefulWidget {
   final CoffeeModel? coffeeModel;
@@ -59,26 +64,53 @@ class _DetailsViewState extends State<DetailsView> {
                               },
                             ),
                           ),
-                          Positioned(
-                            top: 30,
-                            right: 60,
-                            child: DetailsIconButton(
-                              iconData: Icons.heart_broken,
-                              onTap: () {},
-                            ),
+                          BlocBuilder<HomeCubit, HomeState>(
+                            builder: (context, state) {
+                              if (HomeCubit.get(context)
+                                  .isFavorite(widget.coffeeModel!.id!)) {
+                                return Positioned(
+                                  top: 25,
+                                  right: 60,
+                                  child: InkWell(
+                                    onTap: () {
+                                      HomeCubit.get(context).deleteFromFavorite(
+                                          widget.coffeeModel!.id!);
+                                    },
+                                    child: Image.asset(
+                                      'assets/favourites.png',
+                                      fit: BoxFit.fill,
+                                      width: 70,
+                                      height: 70,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                return Positioned(
+                                  top: 30,
+                                  right: 60,
+                                  child: DetailsIconButton(
+                                    iconData: Icons.heart_broken,
+                                    onTap: () {
+                                      HomeCubit.get(context)
+                                          .addToFavorite(widget.coffeeModel!);
+                                    },
+                                  ),
+                                );
+                              }
+                            },
                           ),
                           Container(
                             height: 200,
                             width: MediaQuery.of(context).size.width * .8,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30),
-                              color: Color(0xffA99A97).withOpacity(.7),
+                              color: const Color(0xffA99A97).withOpacity(.7),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(
                                   vertical: 15, horizontal: 10),
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),
@@ -102,7 +134,7 @@ class _DetailsViewState extends State<DetailsView> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   _buildDisplayPrice(),
-                  _buyNowButton(),
+                  _buyNowButton(widget.coffeeModel!),
                 ],
               )
             ],
@@ -148,22 +180,28 @@ class _DetailsViewState extends State<DetailsView> {
   }
 
   ///buy now button implementation
-  Widget _buyNowButton() {
+  Widget _buyNowButton(CoffeeModel coffeeModel) {
     return Expanded(
       flex: 2,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
-        child: MaterialButton(
-          onPressed: () {},
-          height: 60,
-          color: AppColors.orange,
-          child: const Text(
-            'Buy Now',
-            style: TextStyle(
-              fontSize: 25,
-              color: AppColors.white,
-            ),
-          ),
+        child: BlocBuilder<CartCubit, CartState>(
+          builder: (context, state) {
+            return MaterialButton(
+              onPressed: () {
+                CartCubit.get(context).addToCart(CartModel(coffeeModel: coffeeModel,counter: 1,price: 20));
+              },
+              height: 60,
+              color: AppColors.orange,
+              child: const Text(
+                'Add To Cart',
+                style: TextStyle(
+                  fontSize: 25,
+                  color: AppColors.white,
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

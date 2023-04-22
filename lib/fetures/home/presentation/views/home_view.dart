@@ -1,18 +1,16 @@
-import 'package:coffee_app/core/functions/navigation.dart';
+import 'package:coffee_app/fetures/home/home_view_model/bloc/data_bloc.dart';
+import 'package:coffee_app/fetures/home/presentation/views/details.dart';
+import 'package:coffee_app/fetures/home/presentation/views/search_view.dart';
+
+import '../../../../core/functions/navigation.dart';
+import '../../home_view_model/home_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shimmer_animation/shimmer_animation.dart';
-
 import 'package:flutter/material.dart';
-
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widget/custom_icon.dart';
-import '../../../../core/widget/custom_image.dart';
 import '../../../../core/widget/custom_sized_box.dart';
 import '../../../../core/widget/custom_text.dart';
-import '../../data/model/coffee_model.dart';
-import '../../data/repository/home_repo.dart';
-import '../../home_view_model/home_cubit.dart';
-import 'details.dart';
+import 'package:lottie/lottie.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -22,24 +20,16 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  int counter = 0;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // AuthRepo().userLogin(email: 'omer@gmail.com',password: '123456');
+    BlocProvider.of<DataBloc>(context).add(const GetHomeDataEvent());
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HomeCubit(HomeRepository())..getHomeData(),
-      child: Scaffold(
-        backgroundColor: AppColors.black,
-        appBar: _homeAppBar(),
-        body: _homeBody(),
-      ),
-    );
+    return _homeBody();
   }
 
   Padding _homeBody() {
@@ -53,164 +43,181 @@ class _HomeViewState extends State<HomeView> {
           const CustomSizedBox(value: .02),
           _searchBar(),
           const CustomSizedBox(value: .04),
-          Expanded(
-            child: BlocBuilder<HomeCubit, HomeState>(
-              builder: (context, state) {
-                if (state is HomeSuccessState) {
-                  return ListView.separated(
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          navigatedTo( DetailsView(coffeeModel: state.coffeeModel[index]));
-                        },
-                        child: _productsWidget(
-                            coffeeModel: state.coffeeModel[index]),
-                      );
-                    },
-                    separatorBuilder: (context, index) => const SizedBox(
-                      height: 10,
-                    ),
-                    itemCount: state.coffeeModel.length,
-                  );
-                } else if (state is HomeLoadingState) {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.orange,
-                    ),
-                  );
-                } else {
-                  return Center(
-                    child: CustomText(
-                      title: 'Oops An Error',
-                      color: AppColors.orange,
-                      fontSize: 18,
-                    ),
-                  );
-                }
-              },
-            ),
-          )
+          BlocBuilder<DataBloc, DataState>(
+            buildWhen: (previous, current) => current.coffeeList.isNotEmpty,
+            builder: (context, state) {
+              final coffeeList = BlocProvider.of<DataBloc>(context).coffeeList;
+              if (coffeeList.isNotEmpty) {
+                return _buildHomeData(state, context);
+              } else if (state.isLoading = true) {
+                print('data loading');
+                return _buildHomeLoading();
+              } else if (state.error.isEmpty) {
+                return _buildHomeErrorWidget(state, context);
+              } else {
+                return TextButton(
+                  onPressed: () {
+                    BlocProvider.of<DataBloc>(context)
+                        .add(const GetHomeDataEvent());
+                  },
+                  child: CustomText(
+                    title: 'Try Again',
+                    color: AppColors.orange,
+                    fontSize: 18,
+                  ),
+                );
+              }
+            },
+          ),
         ],
       ),
     );
   }
 
-  AppBar _homeAppBar() {
-    return AppBar(
-      backgroundColor: AppColors.black,
-      leading: InkWell(
-        onTap: () {},
-        child: CustomAssetsImage(path: 'assets/menu.png'),
-      ),
-      actions: const [
-        InkWell(
-          child: Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: CircleAvatar(
-              radius: 25,
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
-  Shimmer _productsWidget({required CoffeeModel coffeeModel}) {
-    return Shimmer(
-      interval: const Duration(seconds: 3),
-      child: Container(
-        padding: const EdgeInsets.all(3),
-        width: double.infinity,
-        height: 200,
-        decoration: BoxDecoration(
-            color: AppColors.whiteGray,
-            borderRadius: BorderRadius.circular(22),
-            border: Border.all(color: AppColors.orange)),
-        child: LayoutBuilder(
-          builder: (p0, p1) => Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Image.network(
-                  coffeeModel.image!.isEmpty || coffeeModel.image == null
-                      ? "https://upload.wikimedia.org/wikipedia/commons/f/f6/Mocaccino-Coffee.jpg"
-                      : coffeeModel.image!,
-                  width: p1.maxWidth / 2,
-                  height: p1.maxHeight,
-                  fit: BoxFit.fill,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                  child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      coffeeModel.title!.isEmpty ? 'Mocha' : coffeeModel.title!,
-                      style: const TextStyle(
-                        fontSize: 30,
-                        color: AppColors.orange,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      coffeeModel.description!.isEmpty
-                          ? 'For all you chocolate lovers out there, you’ll fall in love with a mocha (or maybe you already have). '
-                          : coffeeModel.description!,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: AppColors.gray,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 10),
-                    Wrap(
-                      children: List.generate(
-                        4,
-                        (index) =>
-                            const Icon(Icons.star, color: AppColors.orange),
-                      ),
-                    ),
-                  ],
-                ),
-              ))
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Container _searchBar() {
-    return Container(
-      height: 50,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: AppColors.gray,
-      ),
-      child: Row(
+  Center _buildHomeErrorWidget(DataState state, context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          IconButton(
-            onPressed: () {},
-            icon: CustomIcon(
-                iconData: Icons.search, size: 35, color: AppColors.whiteGray),
-          ),
-          const SizedBox(width: 20),
           CustomText(
-            title: 'Find your coffee',
-            color: AppColors.whiteGray,
+            title: state.error.toString(),
+            color: AppColors.orange,
             fontSize: 18,
           ),
+          TextButton(
+            onPressed: () {
+              BlocProvider.of<DataBloc>(context).add(const GetHomeDataEvent());
+            },
+            child: CustomText(
+              title: 'Try Again',
+              color: AppColors.orange,
+              fontSize: 18,
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Center _buildHomeLoading() {
+    return Center(
+      child: Lottie.asset('assets/coffee_loading.json'),
+    );
+  }
+
+  Expanded _buildHomeData(DataState state, context) {
+    return Expanded(
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, // Number of columns
+          mainAxisSpacing: 10.0, // Space between rows
+          crossAxisSpacing: 10.0, // Space between columns
+          childAspectRatio:
+              1.0, // Ratio between the width and height of each child widget
+        ),
+        itemCount: HomeCubit.get(context)
+            .coffeeList
+            .length, // Number of items in the grid
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
+            onTap: () {
+              navigatedTo(DetailsView(coffeeModel: state.coffeeList[index]));
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: Card(
+                color: AppColors.whiteGray,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: LayoutBuilder(
+                    builder: (p0, p1) => Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.network(
+                              state.coffeeList[index].image!.isEmpty ||
+                                      state.coffeeList[index].image == null
+                                  ? "https://upload.wikimedia.org/wikipedia/commons/f/f6/Mocaccino-Coffee.jpg"
+                                  : state.coffeeList[index].image!,
+                              width: p1.maxWidth,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          state.coffeeList[index].title!.isEmpty
+                              ? 'Mocha'
+                              : state.coffeeList[index].title!,
+                          style: const TextStyle(
+                            fontSize: 25,
+                            color: AppColors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 5),
+                        RichText(
+                          text: const TextSpan(
+                            text: '\$ ',
+                            style: TextStyle(
+                              color: Colors.orange,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: '20',
+                                style: TextStyle(
+                                  color: AppColors.gray,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _searchBar() {
+    return InkWell(
+      onTap: () => navigatedTo(const SearchView()),
+      child: Container(
+        height: 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: AppColors.gray,
+        ),
+        child: Row(
+          children: [
+            IconButton(
+              onPressed: () {},
+              icon: CustomIcon(
+                  iconData: Icons.search, size: 35, color: AppColors.whiteGray),
+            ),
+            const SizedBox(width: 20),
+            CustomText(
+              title: 'Find your coffee',
+              color: AppColors.whiteGray,
+              fontSize: 18,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -9,6 +9,7 @@ class HomeRepository {
     response.data.forEach((element) {
       list.add(CoffeeModel.fromJson(element));
     });
+    print(response.data);
     return list;
   }
 }

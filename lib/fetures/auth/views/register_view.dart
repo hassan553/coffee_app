@@ -1,4 +1,7 @@
+import 'package:coffee_app/fetures/auth/data/repository/auth_repo.dart';
+import 'package:coffee_app/fetures/home/presentation/views/main_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/functions/get_size.dart';
 import '../../../core/functions/navigation.dart';
 import '../../../core/utils/app_colors.dart';
@@ -7,6 +10,7 @@ import '../../../core/widget/custom_sized_box.dart';
 import '../../../core/widget/custom_text.dart';
 import '../../../core/widget/text_form_field.dart';
 import '../../home/presentation/views/home_view.dart';
+import '../auth_view_model/register/register_cubit.dart';
 import '../widgets/auth_background_image.dart';
 import '../widgets/top_left_image.dart';
 
@@ -16,7 +20,9 @@ class RegisterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _registerBody(context),
+      body: BlocProvider(
+          create: (context) => RegisterCubit(AuthRepo()),
+          child: _registerBody(context)),
     );
   }
 
@@ -83,12 +89,25 @@ class RegisterView extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: SizedBox(
         width: screenSize(context).width * .7,
-        child: CustomButton(
-          function: () {
-            navigatedTo(const HomeView());
+        child: BlocConsumer<RegisterCubit, RegisterState>(
+          listener: (context, state) {
+            if (state is RegisterSuccessfullyState) {
+              navigatedTo(const MainView());
+            } else if (state is RegisterErrorState) {
+              print('ererr');
+            }
           },
-          title: 'Sign Up',
-          fontSize: 20,
+          builder: (context, state) => CustomButton(
+            function: () {
+              RegisterCubit.get(context).userRegister(
+                  email: 'omer2@gmail.com',
+                  name: 'omwew',
+                  password: '123456',
+                  phone: '121111122212');
+            },
+            title: 'Sign Up',
+            fontSize: 20,
+          ),
         ),
       ),
     );
