@@ -3,6 +3,7 @@ import 'package:coffee_app/fetures/home/presentation/views/details.dart';
 import 'package:coffee_app/fetures/home/presentation/views/search_view.dart';
 
 import '../../../../core/functions/navigation.dart';
+import '../../../../core/widget/custom_cached_network_image.dart';
 import '../../home_view_model/home_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import '../../../../core/widget/custom_icon.dart';
 import '../../../../core/widget/custom_sized_box.dart';
 import '../../../../core/widget/custom_text.dart';
 import 'package:lottie/lottie.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -138,13 +140,8 @@ class _HomeViewState extends State<HomeView> {
                         Expanded(
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
-                            child: Image.network(
-                              state.coffeeList[index].image!.isEmpty ||
-                                      state.coffeeList[index].image == null
-                                  ? "https://upload.wikimedia.org/wikipedia/commons/f/f6/Mocaccino-Coffee.jpg"
-                                  : state.coffeeList[index].image!,
-                              width: p1.maxWidth,
-                              fit: BoxFit.fill,
+                            child: CustomCachedNetworkImage(
+                                image: state.coffeeList[index].image!,width: p1.maxWidth,
                             ),
                           ),
                         ),

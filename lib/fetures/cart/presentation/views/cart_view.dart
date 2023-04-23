@@ -1,4 +1,5 @@
 import '../../../../core/functions/navigation.dart';
+import '../../../../core/widget/custom_cached_network_image.dart';
 import '../cart_view_model.dart/cart_cubit.dart';
 import '../../../home/controller/home_controller.dart';
 import 'package:flutter/material.dart';
@@ -31,8 +32,10 @@ class CartView extends StatelessWidget {
                     return Expanded(
                       child: ListView.builder(
                         physics: const BouncingScrollPhysics(),
-                        itemBuilder: (context, index) =>
-                            CartProductWidget(cartModel: cartList[index]),
+                        itemBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.only(bottom: 5),
+                          child: CartProductWidget(cartModel: cartList[index]),
+                        ),
                         itemCount: cartList.length,
                       ),
                     );
@@ -136,8 +139,8 @@ class CartProductWidget extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.network(
-              cartModel.coffeeModel.image!,
+            child: CustomCachedNetworkImage(
+              image: cartModel.coffeeModel.image!,
               fit: BoxFit.cover,
               width: 150,
             ),

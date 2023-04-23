@@ -5,6 +5,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 
 import '../../../../core/functions/get_size.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/widget/custom_cached_network_image.dart';
 import '../../../../core/widget/custom_text.dart';
 import '../../../cart/data/model/cart_model.dart';
 import '../../../cart/presentation/cart_view_model.dart/cart_cubit.dart';
@@ -46,11 +47,10 @@ class _DetailsViewState extends State<DetailsView> {
                             duration: const Duration(seconds: 5),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(30),
-                              child: Image.network(
-                                widget.coffeeModel!.image!,
-                                fit: BoxFit.fill,
-                                height: 450,
+                              child: CustomCachedNetworkImage(
+                                image: widget.coffeeModel!.image!,
                                 width: MediaQuery.of(context).size.width * .8,
+                                height: 450,
                               ),
                             ),
                           ),
@@ -68,34 +68,9 @@ class _DetailsViewState extends State<DetailsView> {
                             builder: (context, state) {
                               if (HomeCubit.get(context)
                                   .isFavorite(widget.coffeeModel!.id!)) {
-                                return Positioned(
-                                  top: 25,
-                                  right: 60,
-                                  child: InkWell(
-                                    onTap: () {
-                                      HomeCubit.get(context).deleteFromFavorite(
-                                          widget.coffeeModel!.id!);
-                                    },
-                                    child: Image.asset(
-                                      'assets/favourites.png',
-                                      fit: BoxFit.fill,
-                                      width: 70,
-                                      height: 70,
-                                    ),
-                                  ),
-                                );
+                                return favoriteWidget(context);
                               } else {
-                                return Positioned(
-                                  top: 30,
-                                  right: 60,
-                                  child: DetailsIconButton(
-                                    iconData: Icons.heart_broken,
-                                    onTap: () {
-                                      HomeCubit.get(context)
-                                          .addToFavorite(widget.coffeeModel!);
-                                    },
-                                  ),
-                                );
+                                return addToFavoriteWidget(context);
                               }
                             },
                           ),
@@ -104,11 +79,97 @@ class _DetailsViewState extends State<DetailsView> {
                             width: MediaQuery.of(context).size.width * .8,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30),
-                              color: const Color(0xffA99A97).withOpacity(.7),
+                              color: const Color(0xffA99A97).withOpacity(.3),
                             ),
-                            child: const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 10),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        CustomText(
+                                          title: widget.coffeeModel!.title!,
+                                          color: AppColors.white,
+                                          fontSize: 35,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        CustomText(
+                                          title: widget
+                                              .coffeeModel!.ingredients![0]
+                                              .toString(),
+                                          color:
+                                              AppColors.white.withOpacity(.7),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        const SizedBox(height: 20),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Icon(Icons.star,
+                                                color: AppColors.orange),
+                                            const SizedBox(width: 5),
+                                            CustomText(
+                                              title: '4.5',
+                                              color: AppColors.white,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            const SizedBox(width: 5),
+                                            CustomText(
+                                              title: '(4.125)',
+                                              color: AppColors.white
+                                                  .withOpacity(.7),
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            integrationWidget(
+                                                'assets/coffee_imag.png',
+                                                'Coffee'),
+                                            integrationWidget(
+                                                'assets/milk.png', 'Milk'),
+                                          ],
+                                        ),
+                                        Container(
+                                          height: 50,
+                                          alignment: Alignment.center,
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                              color: AppColors.black,
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          child: CustomText(
+                                            title: 'Medium Roasted',
+                                            color:
+                                                AppColors.white.withOpacity(.7),
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           )
                         ],
@@ -122,7 +183,6 @@ class _DetailsViewState extends State<DetailsView> {
                         DetailsDescription(
                           description: widget.coffeeModel!.description!,
                         ),
-                        const SizedBox(height: 30),
                         const SelectCoffeeSize(),
                         const SizedBox(height: 20),
                       ],
@@ -140,6 +200,67 @@ class _DetailsViewState extends State<DetailsView> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Positioned addToFavoriteWidget(BuildContext context) {
+    return Positioned(
+      top: 30,
+      right: 60,
+      child: DetailsIconButton(
+        iconData: Icons.heart_broken,
+        onTap: () {
+          HomeCubit.get(context).addToFavorite(widget.coffeeModel!);
+        },
+      ),
+    );
+  }
+
+  Positioned favoriteWidget(BuildContext context) {
+    return Positioned(
+      top: 25,
+      right: 60,
+      child: InkWell(
+        onTap: () {
+          HomeCubit.get(context).deleteFromFavorite(widget.coffeeModel!.id!);
+        },
+        child: Image.asset(
+          'assets/favourites.png',
+          fit: BoxFit.fill,
+          width: 70,
+          height: 70,
+        ),
+      ),
+    );
+  }
+
+  Container integrationWidget(String image, String title) {
+    return Container(
+      width: 80,
+      height: 80,
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+          color: AppColors.black, borderRadius: BorderRadius.circular(20)),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            image,
+            width: 40,
+            height: 40,
+            fit: BoxFit.fill,
+          ),
+          FittedBox(
+            fit: BoxFit.cover,
+            clipBehavior: Clip.hardEdge,
+            child: CustomText(
+              title: title,
+              color: AppColors.white,
+              fontSize: 18,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -189,7 +310,8 @@ class _DetailsViewState extends State<DetailsView> {
           builder: (context, state) {
             return MaterialButton(
               onPressed: () {
-                CartCubit.get(context).addToCart(CartModel(coffeeModel: coffeeModel,counter: 1,price: 20));
+                CartCubit.get(context).addToCart(
+                    CartModel(coffeeModel: coffeeModel, counter: 1, price: 20));
               },
               height: 60,
               color: AppColors.orange,

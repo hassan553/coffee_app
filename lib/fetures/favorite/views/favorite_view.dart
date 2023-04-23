@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../home/home_view_model/home_cubit.dart';
 import '../../home/presentation/components/_build_product_item.dart';
-import '../data/local_database.dart';
 
 class FavoriteView extends StatelessWidget {
   const FavoriteView({super.key});
@@ -25,9 +24,11 @@ class FavoriteView extends StatelessWidget {
                 itemCount: list.length,
                 itemBuilder: (context, index) => InkWell(
                   onTap: () {
-                    navigatedTo(DetailsView(
-                      coffeeModel: list[index],
-                    ));
+                    navigatedTo(
+                      DetailsView(
+                        coffeeModel: list[index],
+                      ),
+                    );
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),

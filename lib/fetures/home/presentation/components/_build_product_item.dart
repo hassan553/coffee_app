@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+import '../../../../core/widget/custom_cached_network_image.dart';
 import '../../data/model/coffee_model.dart';
 import '../../../../core/utils/app_colors.dart';
 
@@ -28,13 +29,11 @@ class ProductItemWidget extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: Image.network(
-                  coffeeModel.image!.isEmpty || coffeeModel.image == null
-                      ? "https://upload.wikimedia.org/wikipedia/commons/f/f6/Mocaccino-Coffee.jpg"
-                      : coffeeModel.image!,
+                child: CustomCachedNetworkImage(
+                  image: coffeeModel.image!,
+                  fit: BoxFit.cover,
                   width: p1.maxWidth / 2,
                   height: p1.maxHeight,
-                  fit: BoxFit.fill,
                 ),
               ),
               const SizedBox(width: 10),
