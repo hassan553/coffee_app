@@ -43,41 +43,56 @@ class RegisterView extends StatelessWidget {
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              const CustomSizedBox(value: .05),
-              CustomText(
-                title: 'Sign Up',
-                color: AppColors.brown,
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              ),
-              const CustomSizedBox(value: .01),
-              CustomText(
-                title: 'Name',
-                color: AppColors.brownLite,
-                fontSize: 20,
-              ),
-              const CustomTextField(hintText: 'name'),
-              const CustomSizedBox(value: .03),
-              CustomText(
-                title: 'Email address',
-                color: AppColors.brownLite,
-                fontSize: 20,
-              ),
-              const CustomTextField(hintText: 'email'),
-              const CustomSizedBox(value: .03),
-              CustomText(
-                title: 'Password',
-                color: AppColors.brownLite,
-                fontSize: 20,
-              ),
-              const CustomTextField(hintText: 'password'),
-              const CustomSizedBox(value: .1),
-              _buildSignUpButton(context),
-            ],
+          child: BlocBuilder<RegisterCubit, RegisterState>(
+            builder: (context, state) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const CustomSizedBox(value: .05),
+                  CustomText(
+                    title: 'Sign Up',
+                    color: AppColors.brown,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  const CustomSizedBox(value: .01),
+                  CustomText(
+                    title: 'Name',
+                    color: AppColors.brownLite,
+                    fontSize: 20,
+                  ),
+                  CustomTextField(
+                    hintText: 'name',
+                    onSave: (value) => RegisterCubit.get(context).name = value!,
+                  ),
+                  const CustomSizedBox(value: .03),
+                  CustomText(
+                    title: 'Email address',
+                    color: AppColors.brownLite,
+                    fontSize: 20,
+                  ),
+                  CustomTextField(
+                    hintText: 'email',
+                    onSave: (value) =>
+                        RegisterCubit.get(context).email = value!,
+                  ),
+                  const CustomSizedBox(value: .03),
+                  CustomText(
+                    title: 'Password',
+                    color: AppColors.brownLite,
+                    fontSize: 20,
+                  ),
+                  CustomTextField(
+                    hintText: 'password',
+                    onSave: (value) =>
+                        RegisterCubit.get(context).password = value!,
+                  ),
+                  const CustomSizedBox(value: .1),
+                  _buildSignUpButton(context),
+                ],
+              );
+            },
           ),
         ),
       ),

@@ -8,7 +8,9 @@ part 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
   AuthRepo authRepo;
-
+  var email = '';
+  var password = '';
+  var name = '';
   RegisterCubit(this.authRepo) : super(RegisterInitial());
   static RegisterCubit get(context) => BlocProvider.of(context);
   Future userRegister({

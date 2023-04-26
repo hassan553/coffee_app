@@ -5,7 +5,6 @@ import '../fetures/onboarding/view/splash_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import '../core/services/services_lecator.dart';
 import '../core/utils/app_colors.dart';
 import '../fetures/home/data/repository/home_repo.dart';
 import '../fetures/home/home_view_model/home_cubit.dart';
@@ -24,7 +23,7 @@ class CoffeeApp extends StatelessWidget {
         BlocProvider(
           create: (context) => CartCubit(),
         ),
-         BlocProvider(
+        BlocProvider(
           create: (context) => DataBloc(HomeRepository()),
         ),
       ],
@@ -49,3 +48,4 @@ class CoffeeApp extends StatelessWidget {
     );
   }
 }
+

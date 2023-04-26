@@ -8,6 +8,8 @@ part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   AuthRepo authRepo;
+  var email = '';
+  var password = '';
   LoginCubit(this.authRepo) : super(LoginInitial());
   static LoginCubit get(context) => BlocProvider.of(context);
   void userLogin({

@@ -4,12 +4,14 @@ import '../utils/app_colors.dart';
 
 class CustomTextField extends StatelessWidget {
   final String hintText;
-  const CustomTextField({super.key, required this.hintText});
+  final Function(String?)? onSave;
+  const CustomTextField({super.key, required this.hintText,required this.onSave});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       cursorColor: AppColors.brown,
+      onSaved: onSave,
       decoration: InputDecoration(
         labelText: hintText,
         labelStyle: const TextStyle(color: AppColors.brown),

@@ -54,30 +54,43 @@ class LoginView extends StatelessWidget {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomText(
-              title: 'Sign In',
-              color: AppColors.brown,
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-            ),
-            const SizedBox(height: 5),
-            CustomText(
-              title: 'Email address',
-              color: AppColors.brownLite,
-              fontSize: 20,
-            ),
-            const CustomTextField(hintText: 'email'),
-            const SizedBox(height: 20),
-            CustomText(
-              title: 'Password',
-              color: AppColors.brownLite,
-              fontSize: 20,
-            ),
-            const CustomTextField(hintText: 'password'),
-          ],
+        child: BlocBuilder<LoginCubit, LoginState>(
+          builder: (context, state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomText(
+                  title: 'Sign In',
+                  color: AppColors.brown,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
+                const SizedBox(height: 5),
+                CustomText(
+                  title: 'Email address',
+                  color: AppColors.brownLite,
+                  fontSize: 20,
+                ),
+                CustomTextField(
+                  hintText: 'email',
+                  onSave: (value) {
+                    LoginCubit.get(context).email = value!;
+                  },
+                ),
+                const SizedBox(height: 20),
+                CustomText(
+                  title: 'Password',
+                  color: AppColors.brownLite,
+                  fontSize: 20,
+                ),
+                 CustomTextField(hintText: 'password',
+                  onSave: (value) {
+                    LoginCubit.get(context).password = value!;
+                  },
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -96,7 +109,7 @@ class LoginView extends StatelessWidget {
           },
           builder: (context, state) => CustomButton(
             function: () => LoginCubit.get(context)
-                .userLogin(email: 'omeir@gmail.com', password: '123456'),
+                .userLogin(email: LoginCubit.get(context).email, password: LoginCubit.get(context).password),
             title: 'Sign In',
             fontSize: 20,
           ),
