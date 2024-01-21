@@ -3,8 +3,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../cart/presentation/views/cart_view.dart';
-import '../../favorite/data/local_database.dart';
-import '../../favorite/views/favorite_view.dart';
+import '../../favorite/data/local_data_soucre/local_database.dart';
+import '../../favorite/presenstation/views/favorite_view.dart';
 import '../data/model/coffee_model.dart';
 import '../data/repository/home_repo.dart';
 import 'package:meta/meta.dart';
@@ -15,7 +15,7 @@ part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeRepository homeRepository = HomeRepository();
-  LocalDatabase localDatabase = LocalDatabase();
+  FavoriteLocalDatabase localDatabase = FavoriteLocalDatabase();
   HomeCubit() : super(HomeInitial());
 
   static HomeCubit get(context) => BlocProvider.of(context);
@@ -34,7 +34,7 @@ class HomeCubit extends Cubit<HomeState> {
       print('i end');
     } catch (error) {
       print(error.toString());
-      emit(HomeErrorState( error: error.toString()));
+      emit(HomeErrorState(error: error.toString()));
     }
   }
 

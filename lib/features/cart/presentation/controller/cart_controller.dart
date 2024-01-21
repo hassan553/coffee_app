@@ -2,7 +2,7 @@
 import 'package:get/get.dart';
 
 import '../../../../core/widget/show_awesomeDialog.dart';
-import '../../data/local_data/cart_local_data.dart';
+import '../../data/local_data_source/cart_local_data.dart';
 import '../../data/model/cart_model.dart';
 
 class CartController extends GetxController {

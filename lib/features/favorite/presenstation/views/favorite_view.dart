@@ -1,24 +1,27 @@
-import '../../../core/functions/navigation.dart';
-import '../../../core/utils/app_colors.dart';
-import '../../cart/data/local_data/cart_local_data.dart';
-import '../../home/data/model/coffee_model.dart';
-import '../../home/presentation/views/details.dart';
+import 'package:coffee_app/features/favorite/presenstation/controller/favorite_controller.dart';
+import 'package:get/get.dart';
+
+import '../../../../core/functions/navigation.dart';
+import '../../../../core/utils/app_colors.dart';
+import '../../../home/data/model/coffee_model.dart';
+import '../../../home/presentation/views/details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../home/home_view_model/home_cubit.dart';
-import '../../home/presentation/components/_build_product_item.dart';
+import '../../../home/home_view_model/home_cubit.dart';
+import '../../../home/presentation/components/_build_product_item.dart';
 
 class FavoriteView extends StatelessWidget {
   const FavoriteView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final favoriteController = Get.find<FavoriteController>();
     return Scaffold(
       backgroundColor: AppColors.black,
       body: SafeArea(
-        child: BlocBuilder<HomeCubit, HomeState>(
-          builder: (context, state) {
-            final list = HomeCubit.get(context).getAllFavorite();
+        child: Builder(
+          builder: (context) {
+            final list = favoriteController.getAllFavorite();
             if (list.isNotEmpty) {
               return ListView.builder(
                 itemCount: list.length,
@@ -45,7 +48,7 @@ class FavoriteView extends StatelessWidget {
                 ),
               );
             } else {
-              return Text('EMPTY');
+              return const Text('EMPTY');
             }
           },
         ),

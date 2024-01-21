@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../cart/presentation/views/cart_view.dart';
-import '../../favorite/views/favorite_view.dart';
+import '../../favorite/presenstation/views/favorite_view.dart';
 import '../data/repository/home_repo.dart';
 import '../presentation/views/home_view.dart';
 
