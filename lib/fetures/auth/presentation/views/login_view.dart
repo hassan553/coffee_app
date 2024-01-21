@@ -1,29 +1,22 @@
-import 'package:coffee_app/fetures/auth/auth_view_model/login/login_cubit.dart';
-import 'package:coffee_app/fetures/auth/data/repository/auth_repo.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../home/presentation/views/main_view.dart';
-
-import '../../../core/utils/app_colors.dart';
-import '../../../core/widget/text_form_field.dart';
+import 'package:coffee_app/fetures/auth/presentation/controller/login_controller.dart';
+import 'package:get/get.dart';
+import '../../../../core/utils/app_colors.dart';
+import '../../../../core/widget/text_form_field.dart';
 import '../widgets/auth_background_image.dart';
 import 'register_view.dart';
 import 'package:flutter/material.dart';
-import '../../../core/functions/navigation.dart';
-import '../../../core/widget/custom_button.dart';
-import '../../../core/widget/custom_image.dart';
-import '../../../core/widget/custom_text.dart';
+import '../../../../core/functions/navigation.dart';
+import '../../../../core/widget/custom_button.dart';
+import '../../../../core/widget/custom_image.dart';
+import '../../../../core/widget/custom_text.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => LoginCubit(AuthRepo()),
-      child: Scaffold(
-        body: _buildLoginBody(context),
-      ),
+    return Scaffold(
+      body: _buildLoginBody(context),
     );
   }
 
@@ -51,11 +44,13 @@ class LoginView extends StatelessWidget {
   }
 
   SingleChildScrollView _buildInnerInfoWidgets() {
+    final loginController = Get.find<LoginController>();
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: BlocBuilder<LoginCubit, LoginState>(
-          builder: (context, state) {
+        child: Builder(
+          builder: (context) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -74,7 +69,7 @@ class LoginView extends StatelessWidget {
                 CustomTextField(
                   hintText: 'email',
                   onSave: (value) {
-                    LoginCubit.get(context).email = value!;
+                    loginController.emailController.text = value!;
                   },
                 ),
                 const SizedBox(height: 20),
@@ -83,9 +78,10 @@ class LoginView extends StatelessWidget {
                   color: AppColors.brownLite,
                   fontSize: 20,
                 ),
-                 CustomTextField(hintText: 'password',
+                CustomTextField(
+                  hintText: 'password',
                   onSave: (value) {
-                    LoginCubit.get(context).password = value!;
+                    loginController.passwordController.text = value!;
                   },
                 ),
               ],
@@ -97,22 +93,16 @@ class LoginView extends StatelessWidget {
   }
 
   Align _buildSignInButton(BuildContext context) {
+    final loginController = Get.find<LoginController>();
+
     return Align(
       alignment: Alignment.bottomCenter,
       child: SizedBox(
         width: MediaQuery.of(context).size.width * .7,
-        child: BlocConsumer<LoginCubit, LoginState>(
-          listener: (context, state) {
-            if (state is LoginSuccessfullyState) {
-              navigatedTo(const MainView());
-            }
-          },
-          builder: (context, state) => CustomButton(
-            function: () => LoginCubit.get(context)
-                .userLogin(email: LoginCubit.get(context).email, password: LoginCubit.get(context).password),
-            title: 'Sign In',
-            fontSize: 20,
-          ),
+        child: CustomButton(
+          function: () => loginController.userLogin(context: context),
+          title: 'Sign In',
+          fontSize: 20,
         ),
       ),
     );
@@ -121,18 +111,12 @@ class LoginView extends StatelessWidget {
   Padding _buildSignUpButton() {
     return Padding(
       padding: const EdgeInsets.only(top: 30, right: 5),
-      child: BlocConsumer<LoginCubit, LoginState>(
-        listener: (context, state) {
-          if (state is LoginSuccessfullyState) {}
-        },
-        builder: (context, state) => MaterialButton(
-          padding: const EdgeInsets.all(20),
-          color: AppColors.brownLite,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          onPressed: () => navigatedTo(const RegisterView()),
-          child: const Text('Sign Up'),
-        ),
+      child: MaterialButton(
+        padding: const EdgeInsets.all(20),
+        color: AppColors.brownLite,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        onPressed: () => navigatedTo(const RegisterView()),
+        child: const Text('Sign Up'),
       ),
     );
   }

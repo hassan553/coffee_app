@@ -1,6 +1,6 @@
-import '../../../app/app_route.dart';
+import 'package:coffee_app/fetures/onboarding/view/onboarding_view.dart';
 import 'package:flutter/material.dart';
-
+import '../../../core/functions/navigation.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/widget/custom_image.dart';
 
@@ -20,8 +20,8 @@ class _SplashViewState extends State<SplashView> {
   }
 
   void _splashNavigateFunction() {
-    Future.delayed(const Duration(seconds: 1),
-        () => Navigator.pushNamed(context, AppRoute.onboardingRoute));
+    Future.delayed(
+        const Duration(seconds: 1), () => navigatedOff(const OnboardingView()));
   }
 
   @override

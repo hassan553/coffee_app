@@ -6,7 +6,7 @@ import '../../../core/widget/custom_sized_box.dart';
 import '../../../core/widget/custom_text.dart';
 import 'package:flutter/material.dart';
 
-import '../../auth/views/login_view.dart';
+import '../../auth/presentation/views/login_view.dart';
 
 class OnboardingView extends StatelessWidget {
   const OnboardingView({super.key});
