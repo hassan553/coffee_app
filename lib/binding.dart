@@ -1,6 +1,8 @@
 import 'package:coffee_app/fetures/auth/data/repository/auth_repo.dart';
 import 'package:coffee_app/fetures/auth/presentation/controller/login_controller.dart';
 import 'package:coffee_app/fetures/auth/presentation/controller/register_controller.dart';
+import 'package:coffee_app/fetures/cart/data/local_data/cart_local_data.dart';
+import 'package:coffee_app/fetures/cart/presentation/controller/cart_controller.dart';
 import 'package:get/get.dart';
 
 class MyBinding extends Bindings {
@@ -8,5 +10,6 @@ class MyBinding extends Bindings {
   void dependencies() {
     Get.lazyPut(() => LoginController(authRepo: AuthRepo()));
     Get.lazyPut(() => RegisterController(authRepo: AuthRepo()));
+    Get.lazyPut(() => CartController(localData: CartLocalDatabase()));
   }
 }

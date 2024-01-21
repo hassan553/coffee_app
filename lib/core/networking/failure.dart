@@ -40,3 +40,7 @@ class ServerFailure extends Failure {
 class NoInternetFailure extends Failure {
   NoInternetFailure(super.message);
 }
+
+class CacheFailure extends Failure {
+  CacheFailure(super.message);
+}

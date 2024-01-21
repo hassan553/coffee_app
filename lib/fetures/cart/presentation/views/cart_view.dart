@@ -1,10 +1,11 @@
+import 'package:coffee_app/fetures/cart/presentation/controller/cart_controller.dart';
+import 'package:get/get.dart';
+
 import '../../../../core/functions/navigation.dart';
 import '../../../../core/widget/custom_cached_network_image.dart';
 import '../cart_view_model.dart/cart_cubit.dart';
-import '../../../home/controller/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../../core/utils/app_colors.dart';
@@ -25,9 +26,9 @@ class CartView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              BlocBuilder<CartCubit, CartState>(
-                builder: (context, state) {
-                  final cartList = CartCubit.get(context).getAllCartProducts();
+              GetBuilder<CartController>(
+                builder: (controller) {
+                  final cartList = controller.getAllCartProducts();
                   if (cartList.isNotEmpty) {
                     return Expanded(
                       child: ListView.builder(
@@ -84,10 +85,10 @@ Widget _buildDisplayPrice() {
               fontSize: 23,
             ),
             const SizedBox(width: 5),
-            BlocBuilder<CartCubit, CartState>(
-              builder: (context, state) {
+            GetBuilder<CartController>(
+              builder: (controller) {
                 return CustomText(
-                  title: CartCubit.get(context).totalPrice.toString(),
+                  title: controller.totalPrice.toString(),
                   color: Colors.white,
                   fontSize: 30,
                 );
@@ -160,15 +161,15 @@ class CartProductWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 5),
-              BlocBuilder<CartCubit, CartState>(
-                builder: (context, state) => FittedBox(
+              GetBuilder<CartController>(
+                builder: (controller) => FittedBox(
                   fit: BoxFit.fill,
                   child: Row(
                     children: [
                       InkWell(
                         onTap: () {
-                          CartCubit.get(context).decrementCounter(cartModel);
-                          CartCubit.get(context).calculate();
+                          controller.decrementCounter(cartModel);
+                          controller.calculate();
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
@@ -192,8 +193,8 @@ class CartProductWidget extends StatelessWidget {
                       const SizedBox(width: 20),
                       InkWell(
                         onTap: () {
-                          CartCubit.get(context).incrementCounter(cartModel);
-                          CartCubit.get(context).calculate();
+                          controller.incrementCounter(cartModel);
+                          controller.calculate();
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(

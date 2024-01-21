@@ -1,38 +1,38 @@
+import 'package:coffee_app/core/networking/failure.dart';
+import 'package:dartz/dartz.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
-import '../../../home/data/model/coffee_model.dart';
+import '../../../../core/constants/constants.dart';
 import '../model/cart_model.dart';
 
 class CartLocalDatabase {
- 
-  var notesBox = Hive.box<CartModel>('cart');
-  void addToCart(CartModel cartModel) async {
+  final _notesBox = Hive.box<CartModel>(cartBox);
+  Future<Either<Failure, Unit>> addToCart(CartModel cartModel) async {
     try {
-      await notesBox.put(cartModel.coffeeModel.id, cartModel);
-      print('add successfully');
+      await _notesBox.put(cartModel.coffeeModel.id, cartModel);
+
       getAllCoffeeInCart();
+      return right(unit);
     } catch (error) {
-      print(error.toString());
+      return left(CacheFailure(error.toString()));
     }
   }
 
   List<CartModel> getAllCoffeeInCart() {
-    final allData = notesBox.values.toList();
+    final allData = _notesBox.values.toList();
     return allData;
   }
 
-  void delete(int? id) async {
+  Future<Either<Failure, Unit>> delete(int? id) async {
     try {
-      await notesBox.delete(id).then((value) {
-        print('delete success');
-      });
+      await _notesBox.delete(id);
+      return right(unit);
     } catch (error) {
-      print(error.toString());
+      return left(CacheFailure(error.toString()));
     }
   }
 
   bool isInCart(int? id) {
-    var result = notesBox.get(
+    var result = _notesBox.get(
       id,
     );
     return result == null ? false : true;
