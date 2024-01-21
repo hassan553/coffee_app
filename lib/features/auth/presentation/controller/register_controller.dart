@@ -1,31 +1,30 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:coffee_app/core/functions/navigation.dart';
-import 'package:coffee_app/core/widget/show_awesomeDialog.dart';
-import 'package:coffee_app/core/widget/snack_bar_widget.dart';
-import 'package:coffee_app/fetures/home/presentation/views/main_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-
+import 'package:coffee_app/core/functions/navigation.dart';
+import 'package:coffee_app/core/widget/show_awesomeDialog.dart';
+import '../../../home/presentation/views/main_view.dart';
 import '../../data/repository/auth_repo.dart';
 
-class LoginController extends GetxController {
+class RegisterController extends GetxController {
   AuthRepo authRepo;
   final emailController = TextEditingController();
+  final nameController = TextEditingController();
   final passwordController = TextEditingController();
-  LoginController({
+
+  RegisterController({
     required this.authRepo,
   });
   bool isLoading = false;
-  void userLogin({
+  void userRegister({
     required BuildContext context,
   }) async {
     isLoading = true;
     update();
 
-    final result = await authRepo.userLogin(
+    final result = await authRepo.userRegister(
       email: emailController.text,
       password: passwordController.text,
+      name: nameController.text,
     );
     result.fold((l) {
       showAwesomeDialogs(
@@ -39,8 +38,8 @@ class LoginController extends GetxController {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     emailController.dispose();
+    nameController.dispose();
     passwordController.dispose();
     super.dispose();
   }

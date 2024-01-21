@@ -1,7 +1,7 @@
-import 'package:coffee_app/fetures/auth/presentation/controller/login_controller.dart';
 import 'package:get/get.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widget/text_form_field.dart';
+import '../controller/login_controller.dart';
 import '../widgets/auth_background_image.dart';
 import 'register_view.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import 'package:coffee_app/fetures/onboarding/view/onboarding_view.dart';
+import 'package:coffee_app/features/onboarding/view/onboarding_view.dart';
 import 'package:flutter/material.dart';
 import '../../../core/functions/navigation.dart';
 import '../../../core/utils/app_colors.dart';

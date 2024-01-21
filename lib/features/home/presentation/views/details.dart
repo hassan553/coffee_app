@@ -2,19 +2,14 @@
 import 'package:coffee_app/core/functions/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
-
-import '../../../../core/functions/get_size.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widget/custom_cached_network_image.dart';
 import '../../../../core/widget/custom_text.dart';
 import '../../../cart/data/model/cart_model.dart';
-import '../../../cart/presentation/cart_view_model.dart/cart_cubit.dart';
-import '../../../favorite/views/favorite_view.dart';
 import '../../data/model/coffee_model.dart';
 import '../components/_build_details_description.dart';
 import '../components/_build_icon_button.dart';
 import '../components/_build_select_coffe_size.dart';
-import 'package:coffee_app/fetures/home/home_view_model/home_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DetailsView extends StatefulWidget {
