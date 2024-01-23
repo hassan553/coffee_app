@@ -1,40 +1,25 @@
-import 'package:coffee_app/fetures/home/home_view_model/bloc/data_bloc.dart';
-import 'package:coffee_app/fetures/home/presentation/views/details.dart';
-import 'package:coffee_app/fetures/home/presentation/views/search_view.dart';
-
+import 'package:coffee_app/features/home/presentation/controller/home_controller.dart';
+import 'package:coffee_app/features/home/presentation/views/details.dart';
+import 'package:coffee_app/features/home/presentation/views/search_view.dart';
+import 'package:get/get.dart';
 import '../../../../core/functions/navigation.dart';
 import '../../../../core/widget/custom_cached_network_image.dart';
-import '../../home_view_model/home_cubit.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widget/custom_icon.dart';
 import '../../../../core/widget/custom_sized_box.dart';
 import '../../../../core/widget/custom_text.dart';
 import 'package:lottie/lottie.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
-class HomeView extends StatefulWidget {
+class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
-}
-
-class _HomeViewState extends State<HomeView> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    BlocProvider.of<DataBloc>(context).add(const GetHomeDataEvent());
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return _homeBody();
+    return _homeBody(context);
   }
 
-  Padding _homeBody() {
+  Padding _homeBody(context) {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20),
       child: Column(
@@ -45,28 +30,20 @@ class _HomeViewState extends State<HomeView> {
           const CustomSizedBox(value: .02),
           _searchBar(),
           const CustomSizedBox(value: .04),
-          BlocBuilder<DataBloc, DataState>(
-            buildWhen: (previous, current) => current.coffeeList.isNotEmpty,
-            builder: (context, state) {
-              final coffeeList = BlocProvider.of<DataBloc>(context).coffeeList;
+          GetBuilder<HomeController>(
+            builder: (controller) {
+              final coffeeList = controller.coffeeList;
               if (coffeeList.isNotEmpty) {
-                return _buildHomeData(state, context);
-              } else if (state.isLoading = true) {
-                print('data loading');
+                return _buildHomeData(context);
+              } else if (controller.isLoading = true) {
                 return _buildHomeLoading();
-              } else if (state.error.isEmpty) {
-                return _buildHomeErrorWidget(state, context);
               } else {
                 return TextButton(
-                  onPressed: () {
-                    BlocProvider.of<DataBloc>(context)
-                        .add(const GetHomeDataEvent());
-                  },
+                  onPressed: () => controller.getHomeData(),
                   child: CustomText(
-                    title: 'Try Again',
-                    color: AppColors.orange,
-                    fontSize: 18,
-                  ),
+                      title: 'Try Again',
+                      color: AppColors.orange,
+                      fontSize: 18),
                 );
               }
             },
@@ -76,19 +53,20 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Center _buildHomeErrorWidget(DataState state, context) {
+  Center _buildHomeErrorWidget(context) {
+    final controller = Get.find<HomeController>();
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CustomText(
-            title: state.error.toString(),
+            title: 'Something wrong please try later',
             color: AppColors.orange,
             fontSize: 18,
           ),
           TextButton(
             onPressed: () {
-              BlocProvider.of<DataBloc>(context).add(const GetHomeDataEvent());
+              controller.getHomeData();
             },
             child: CustomText(
               title: 'Try Again',
@@ -107,7 +85,8 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Expanded _buildHomeData(DataState state, context) {
+  Expanded _buildHomeData(BuildContext context) {
+    final controller = Get.find<HomeController>();
     return Expanded(
       child: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -117,13 +96,12 @@ class _HomeViewState extends State<HomeView> {
           childAspectRatio:
               1.0, // Ratio between the width and height of each child widget
         ),
-        itemCount: HomeCubit.get(context)
-            .coffeeList
-            .length, // Number of items in the grid
+        itemCount: controller.coffeeList.length, // Number of items in the grid
         itemBuilder: (BuildContext context, int index) {
           return InkWell(
             onTap: () {
-              navigatedTo(DetailsView(coffeeModel: state.coffeeList[index]));
+              navigatedTo(
+                  DetailsView(coffeeModel: controller.coffeeList[index]));
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(30),
@@ -141,15 +119,16 @@ class _HomeViewState extends State<HomeView> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child: CustomCachedNetworkImage(
-                                image: state.coffeeList[index].image!,width: p1.maxWidth,
+                              image: controller.coffeeList[index].image!,
+                              width: p1.maxWidth,
                             ),
                           ),
                         ),
                         const SizedBox(height: 5),
                         Text(
-                          state.coffeeList[index].title!.isEmpty
+                          controller.coffeeList[index].title!.isEmpty
                               ? 'Mocha'
-                              : state.coffeeList[index].title!,
+                              : controller.coffeeList[index].title!,
                           style: const TextStyle(
                             fontSize: 25,
                             color: AppColors.white,

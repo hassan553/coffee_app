@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widget/custom_text.dart';
 
@@ -16,15 +13,9 @@ class DetailsDescription extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         CustomText(
-          title: 'Description',
-          color: AppColors.offWhite,
-          fontSize: 30,
-        ),
+            title: 'Description', color: AppColors.offWhite, fontSize: 30),
         const SizedBox(height: 10),
-        TextWithShowMoreButton(
-          maxLines: 3,
-          text: description,
-        ),
+        TextWithShowMoreButton(maxLines: 3, text: description),
       ],
     );
   }

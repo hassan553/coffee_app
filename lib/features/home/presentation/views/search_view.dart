@@ -1,12 +1,11 @@
 import 'package:coffee_app/core/functions/navigation.dart';
-import 'package:coffee_app/fetures/home/home_view_model/home_cubit.dart';
-import 'package:coffee_app/fetures/home/presentation/views/details.dart';
+import 'package:coffee_app/features/home/presentation/controller/home_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/widget/custom_button.dart';
 import '../components/_build_product_item.dart';
+import 'details.dart';
 
 class SearchView extends StatelessWidget {
   const SearchView({super.key});
@@ -31,9 +30,9 @@ class SearchView extends StatelessWidget {
                       height: 60,
                       color: AppColors.orange,
                       onPressed: () {},
-                      child:const  FittedBox(
+                      child: const FittedBox(
                         fit: BoxFit.fill,
-                        child:  Text(
+                        child: Text(
                           'Search',
                           style: TextStyle(color: Colors.white, fontSize: 25),
                         ),
@@ -44,9 +43,9 @@ class SearchView extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Expanded(
-                child: BlocBuilder<HomeCubit, HomeState>(
-                  builder: (context, state) {
-                    final result = HomeCubit.get(context).searchList;
+                child: GetBuilder<HomeController>(
+                  builder: (controller) {
+                    final result = controller.searchList;
                     if (result.isEmpty) {
                       return Center(
                         child: Lottie.asset('assets/no_items.json'),
@@ -77,17 +76,17 @@ class SearchView extends StatelessWidget {
   }
 
   Widget _buildSearchFormWidget() {
-    return BlocBuilder<HomeCubit, HomeState>(
-      builder: (context, state) {
+    return GetBuilder<HomeController>(
+      builder: (controller) {
         return TextFormField(
           onChanged: (value) {
             if (value.isNotEmpty) {
-              HomeCubit.get(context).search(value);
+              controller.search(value);
             }
           },
           onSaved: (value) {
             if (value != null) {
-              HomeCubit.get(context).search(value);
+              controller.search(value);
             }
           },
           autofocus: true,

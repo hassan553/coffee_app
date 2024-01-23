@@ -6,8 +6,6 @@ import '../../../../core/utils/app_colors.dart';
 import '../../../home/data/model/coffee_model.dart';
 import '../../../home/presentation/views/details.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../home/home_view_model/home_cubit.dart';
 import '../../../home/presentation/components/_build_product_item.dart';
 
 class FavoriteView extends StatelessWidget {

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-
 import '../../../../core/utils/app_colors.dart';
 
 class DetailsIconButton extends StatelessWidget {
-  void Function()? onTap;
-  IconData iconData;
-  DetailsIconButton({
+  final void Function()? onTap;
+ final IconData iconData;
+ const  DetailsIconButton({
     Key? key,
     required this.onTap,
     required this.iconData,

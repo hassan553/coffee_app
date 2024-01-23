@@ -1,6 +1,4 @@
-import 'package:coffee_app/core/functions/navigation.dart';
 import 'package:flutter/material.dart';
-
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widget/custom_image.dart';
 
@@ -13,9 +11,7 @@ AppBar homeAppBar() {
     ),
     actions: [
       InkWell(
-        onTap: () {
-          //navigatedTo(screen);
-        },
+        onTap: () {},
         child: Padding(
           padding: const EdgeInsets.only(right: 10),
           child: Container(

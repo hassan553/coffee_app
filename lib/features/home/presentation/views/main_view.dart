@@ -1,7 +1,8 @@
+import 'package:coffee_app/features/home/presentation/controller/home_controller.dart';
+import 'package:get/get.dart';
+
 import '../../../../core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../home_view_model/home_cubit.dart';
 import '../components/_build_appBar.dart';
 
 class MainView extends StatelessWidget {
@@ -9,20 +10,19 @@ class MainView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
-      builder: (context, state) {
-        var cubit = HomeCubit.get(context);
+    return GetBuilder<HomeController>(
+      builder: (controller) {
         return Scaffold(
           backgroundColor: AppColors.black,
           appBar: homeAppBar(),
-          body: cubit.screens[cubit.bottomNavigationCurrentIndex],
+          body: controller.screens[controller.bottomNavigationCurrentIndex],
           bottomNavigationBar: BottomNavigationBar(
-            currentIndex: cubit.bottomNavigationCurrentIndex,
+            currentIndex: controller.bottomNavigationCurrentIndex,
             onTap: (value) {
-              cubit.changeBottomNavigationCurrentIndex(value);
+              controller.changeBottomNavigationCurrentIndex(value);
             },
             iconSize: 40,
-            items: cubit.listBottomBar,
+            items: controller.listBottomBar,
           ),
         );
       },

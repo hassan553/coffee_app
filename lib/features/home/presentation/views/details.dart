@@ -1,6 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:coffee_app/core/functions/navigation.dart';
+import 'package:coffee_app/features/cart/presentation/controller/cart_controller.dart';
+import 'package:coffee_app/features/favorite/presenstation/controller/favorite_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widget/custom_cached_network_image.dart';
@@ -10,17 +13,11 @@ import '../../data/model/coffee_model.dart';
 import '../components/_build_details_description.dart';
 import '../components/_build_icon_button.dart';
 import '../components/_build_select_coffe_size.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DetailsView extends StatefulWidget {
+class DetailsView extends StatelessWidget {
   final CoffeeModel? coffeeModel;
   const DetailsView({super.key, this.coffeeModel});
 
-  @override
-  State<DetailsView> createState() => _DetailsViewState();
-}
-
-class _DetailsViewState extends State<DetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +40,7 @@ class _DetailsViewState extends State<DetailsView> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(30),
                               child: CustomCachedNetworkImage(
-                                image: widget.coffeeModel!.image!,
+                                image: coffeeModel!.image!,
                                 width: MediaQuery.of(context).size.width * .8,
                                 height: 450,
                               ),
@@ -59,10 +56,9 @@ class _DetailsViewState extends State<DetailsView> {
                               },
                             ),
                           ),
-                          BlocBuilder<HomeCubit, HomeState>(
-                            builder: (context, state) {
-                              if (HomeCubit.get(context)
-                                  .isFavorite(widget.coffeeModel!.id!)) {
+                          GetBuilder<FavoriteController>(
+                            builder: (controller) {
+                              if (controller.isFavorite(coffeeModel!.id!)) {
                                 return favoriteWidget(context);
                               } else {
                                 return addToFavoriteWidget(context);
@@ -88,14 +84,13 @@ class _DetailsViewState extends State<DetailsView> {
                                           MainAxisAlignment.center,
                                       children: [
                                         CustomText(
-                                          title: widget.coffeeModel!.title!,
+                                          title: coffeeModel!.title!,
                                           color: AppColors.white,
                                           fontSize: 35,
                                           fontWeight: FontWeight.bold,
                                         ),
                                         CustomText(
-                                          title: widget
-                                              .coffeeModel!.ingredients![0]
+                                          title: coffeeModel!.ingredients![0]
                                               .toString(),
                                           color:
                                               AppColors.white.withOpacity(.7),
@@ -176,7 +171,7 @@ class _DetailsViewState extends State<DetailsView> {
                       children: [
                         const SizedBox(height: 15),
                         DetailsDescription(
-                          description: widget.coffeeModel!.description!,
+                          description: coffeeModel!.description!,
                         ),
                         const SelectCoffeeSize(),
                         const SizedBox(height: 20),
@@ -189,7 +184,7 @@ class _DetailsViewState extends State<DetailsView> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   _buildDisplayPrice(),
-                  _buyNowButton(widget.coffeeModel!),
+                  _buyNowButton(coffeeModel!),
                 ],
               )
             ],
@@ -200,25 +195,27 @@ class _DetailsViewState extends State<DetailsView> {
   }
 
   Positioned addToFavoriteWidget(BuildContext context) {
+    final controller = Get.find<FavoriteController>();
     return Positioned(
       top: 30,
       right: 60,
       child: DetailsIconButton(
         iconData: Icons.heart_broken,
         onTap: () {
-          HomeCubit.get(context).addToFavorite(widget.coffeeModel!);
+          controller.addToFavorite(coffeeModel!);
         },
       ),
     );
   }
 
   Positioned favoriteWidget(BuildContext context) {
+    final controller = Get.find<FavoriteController>();
     return Positioned(
       top: 25,
       right: 60,
       child: InkWell(
         onTap: () {
-          HomeCubit.get(context).deleteFromFavorite(widget.coffeeModel!.id!);
+          controller.deleteFromFavorite(coffeeModel!.id!);
         },
         child: Image.asset(
           'assets/favourites.png',
@@ -301,11 +298,11 @@ class _DetailsViewState extends State<DetailsView> {
       flex: 2,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
-        child: BlocBuilder<CartCubit, CartState>(
-          builder: (context, state) {
+        child: GetBuilder<CartController>(
+          builder: (controller) {
             return MaterialButton(
               onPressed: () {
-                CartCubit.get(context).addToCart(
+                controller.addToCart(
                     CartModel(coffeeModel: coffeeModel, counter: 1, price: 20));
               },
               height: 60,
